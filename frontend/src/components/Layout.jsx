@@ -16,19 +16,27 @@ export default function Layout() {
   ]
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <header className="border-b border-slate-800 bg-slate-900/80 backdrop-blur">
-        <div className="max-w-5xl mx-auto px-4 py-4 flex items-center justify-between">
-          <NavLink to="/dashboard" className="text-xl font-semibold text-emerald-400">
+    <div className="min-h-screen flex flex-col relative overflow-x-hidden">
+      <div className="pointer-events-none absolute inset-0">
+        <div className="absolute top-8 left-10 h-28 w-28 rounded-full bg-emerald-400/10 blur-2xl animate-pulse-soft" />
+        <div className="absolute top-28 right-10 h-24 w-24 rounded-full bg-cyan-400/10 blur-2xl animate-float" />
+      </div>
+      <header className="border-b border-slate-800/80 bg-slate-900/65 backdrop-blur-xl animate-fade-up">
+        <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+          <NavLink to="/dashboard" className="text-xl font-semibold text-emerald-300 tracking-wide">
             AI Resume Analyzer
           </NavLink>
-          <nav className="flex items-center gap-6">
+          <nav className="flex items-center gap-3 sm:gap-4">
             {nav.map(({ to, label }) => (
               <NavLink
                 key={to}
                 to={to}
                 className={({ isActive }) =>
-                  `text-sm font-medium transition ${isActive ? 'text-emerald-400' : 'text-slate-400 hover:text-slate-200'}`
+                  `px-3 py-1.5 rounded-full text-sm font-medium transition-all duration-300 ${
+                    isActive
+                      ? 'text-emerald-200 bg-emerald-500/20 border border-emerald-400/30 shadow-sm shadow-emerald-500/20'
+                      : 'text-slate-300 hover:text-slate-100 hover:bg-slate-800/80 border border-transparent'
+                  }`
                 }
               >
                 {label}
@@ -36,14 +44,14 @@ export default function Layout() {
             ))}
             <button
               onClick={logout}
-              className="text-sm text-slate-400 hover:text-red-400 transition"
+              className="text-sm px-3 py-1.5 rounded-full text-slate-300 hover:text-red-300 hover:bg-red-500/10 transition-all duration-300"
             >
               Logout
             </button>
           </nav>
         </div>
       </header>
-      <main className="flex-1 max-w-5xl w-full mx-auto px-4 py-8">
+      <main className="flex-1 max-w-6xl w-full mx-auto px-4 py-8 animate-fade-up-delay">
         <Outlet />
       </main>
     </div>

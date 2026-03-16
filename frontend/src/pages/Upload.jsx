@@ -32,50 +32,54 @@ export default function Upload() {
   }
 
   return (
-    <div className="max-w-2xl">
-      <h1 className="text-2xl font-bold text-slate-100 mb-2">Upload Resume</h1>
-      <p className="text-slate-400 mb-6">
-        Upload a PDF resume. We'll extract text and detect skills automatically.
-      </p>
+    <div className="max-w-3xl animate-fade-up space-y-6">
+      <div>
+        <h1 className="text-3xl font-bold text-slate-100 mb-2">Upload Resume</h1>
+        <p className="text-slate-300 mb-1">
+          Upload a PDF resume. We'll extract text and detect skills automatically.
+        </p>
+      </div>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
-        {error && (
-          <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-sm">
-            {error}
+      <div className="rounded-2xl border border-slate-700/80 bg-slate-900/75 backdrop-blur p-6 shadow-xl shadow-slate-950/50">
+        <form onSubmit={handleSubmit} className="space-y-4">
+          {error && (
+            <div className="p-3 rounded-xl bg-red-500/10 border border-red-500/30 text-red-300 text-sm animate-fade-up">
+              {error}
+            </div>
+          )}
+          <div>
+            <label className="block text-sm font-medium text-slate-300 mb-2">PDF file</label>
+            <input
+              type="file"
+              accept=".pdf,application/pdf"
+              onChange={(e) => setFile(e.target.files?.[0] || null)}
+              className="block w-full rounded-xl border border-dashed border-slate-600/80 bg-slate-800/50 p-3 text-sm text-slate-300 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-gradient-to-r file:from-emerald-400 file:to-cyan-300 file:text-slate-900 file:font-semibold hover:file:from-emerald-300 hover:file:to-cyan-200 transition-all duration-300"
+            />
           </div>
-        )}
-        <div>
-          <label className="block text-sm font-medium text-slate-300 mb-2">PDF file</label>
-          <input
-            type="file"
-            accept=".pdf,application/pdf"
-            onChange={(e) => setFile(e.target.files?.[0] || null)}
-            className="block w-full text-sm text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-slate-700 file:text-slate-200 file:font-medium hover:file:bg-slate-600"
-          />
-        </div>
-        <button
-          type="submit"
-          disabled={loading || !file}
-          className="px-4 py-2.5 rounded-lg bg-emerald-500 text-slate-900 font-semibold hover:bg-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 disabled:opacity-50"
-        >
-          {loading ? 'Processing...' : 'Upload & Extract'}
-        </button>
-      </form>
+          <button
+            type="submit"
+            disabled={loading || !file}
+            className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-400 to-cyan-300 text-slate-900 font-semibold hover:from-emerald-300 hover:to-cyan-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
+          >
+            {loading ? 'Processing...' : 'Upload & Extract'}
+          </button>
+        </form>
+      </div>
 
       {result && (
-        <div className="mt-8 p-6 rounded-xl bg-slate-800/50 border border-slate-700 space-y-4">
-          <h3 className="text-lg font-semibold text-emerald-400">Resume processed</h3>
-          <p className="text-slate-400 text-sm">
+        <div className="mt-2 p-6 rounded-2xl bg-slate-900/75 border border-slate-700/80 shadow-lg shadow-slate-950/50 space-y-4 animate-fade-up">
+          <h3 className="text-lg font-semibold text-emerald-300">Resume processed</h3>
+          <p className="text-slate-300 text-sm">
             <strong>File:</strong> {result.original_filename}
           </p>
           {result.skills?.length > 0 && (
             <div>
-              <p className="text-slate-400 text-sm mb-2"><strong>Skills found:</strong></p>
+              <p className="text-slate-300 text-sm mb-2"><strong>Skills found:</strong></p>
               <div className="flex flex-wrap gap-2">
                 {result.skills.map((s) => (
                   <span
                     key={s}
-                    className="px-2.5 py-1 rounded-md bg-emerald-500/20 text-emerald-300 text-sm"
+                    className="px-3 py-1 rounded-full border border-emerald-500/40 bg-emerald-500/10 text-emerald-200 text-sm"
                   >
                     {s}
                   </span>

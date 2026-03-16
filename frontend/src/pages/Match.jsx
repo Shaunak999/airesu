@@ -27,15 +27,17 @@ export default function Match() {
   }
 
   return (
-    <div className="max-w-2xl">
-      <h1 className="text-2xl font-bold text-slate-100 mb-2">Job Description Match</h1>
-      <p className="text-slate-400 mb-6">
-        Paste a job description below. We'll compare it with your uploaded resume and show match score, skills found, and missing skills.
-      </p>
+    <div className="max-w-3xl space-y-6 animate-fade-up">
+      <div>
+        <h1 className="text-3xl font-bold text-slate-100 mb-2">Job Description Match</h1>
+        <p className="text-slate-300 mb-1">
+          Paste a job description below. We'll compare it with your uploaded resume and show match score, skills found, and missing skills.
+        </p>
+      </div>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-4 rounded-2xl border border-slate-700/80 bg-slate-900/75 backdrop-blur p-6 shadow-xl shadow-slate-950/50">
         {error && (
-          <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-sm">
+          <div className="p-3 rounded-xl bg-red-500/10 border border-red-500/30 text-red-300 text-sm animate-fade-up">
             {error}
           </div>
         )}
@@ -45,29 +47,29 @@ export default function Match() {
             value={jobDescription}
             onChange={(e) => setJobDescription(e.target.value)}
             rows={8}
-            className="w-full px-4 py-3 rounded-lg bg-slate-800 border border-slate-700 text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 resize-y"
+            className="w-full px-4 py-3 rounded-xl bg-slate-800/90 border border-slate-700 text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-400 resize-y transition-all duration-300"
             placeholder="Paste the full job description here..."
           />
         </div>
         <button
           type="submit"
           disabled={loading}
-          className="px-4 py-2.5 rounded-lg bg-emerald-500 text-slate-900 font-semibold hover:bg-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 disabled:opacity-50"
+          className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-400 to-cyan-300 text-slate-900 font-semibold hover:from-emerald-300 hover:to-cyan-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
         >
           {loading ? 'Analyzing...' : 'Get Match Score'}
         </button>
       </form>
 
       {result && (
-        <div className="mt-8 space-y-6">
-          <div className="p-6 rounded-xl bg-slate-800/50 border border-slate-700">
+        <div className="mt-2 space-y-6 animate-fade-up">
+          <div className="p-6 rounded-2xl bg-slate-900/75 border border-slate-700/80 shadow-lg shadow-slate-950/50">
             <h3 className="text-sm font-medium text-slate-400 uppercase tracking-wider mb-2">
               Match Score
             </h3>
-            <p className="text-4xl font-bold text-emerald-400">{result.match_score}%</p>
+            <p className="text-5xl font-bold text-emerald-300">{result.match_score}%</p>
           </div>
 
-          <div className="p-6 rounded-xl bg-slate-800/50 border border-slate-700">
+          <div className="p-6 rounded-2xl bg-slate-900/75 border border-slate-700/80 shadow-lg shadow-slate-950/50">
             <h3 className="text-sm font-medium text-slate-400 uppercase tracking-wider mb-2">
               Skills found in your resume
             </h3>
@@ -76,7 +78,7 @@ export default function Match() {
                 {result.skills_found.map((s) => (
                   <span
                     key={s}
-                    className="px-2.5 py-1 rounded-md bg-emerald-500/20 text-emerald-300 text-sm"
+                    className="px-3 py-1 rounded-full border border-emerald-500/40 bg-emerald-500/10 text-emerald-200 text-sm"
                   >
                     {s}
                   </span>
@@ -87,7 +89,7 @@ export default function Match() {
             )}
           </div>
 
-          <div className="p-6 rounded-xl bg-slate-800/50 border border-slate-700">
+          <div className="p-6 rounded-2xl bg-slate-900/75 border border-slate-700/80 shadow-lg shadow-slate-950/50">
             <h3 className="text-sm font-medium text-slate-400 uppercase tracking-wider mb-2">
               Missing skills
             </h3>
@@ -96,7 +98,7 @@ export default function Match() {
                 {result.missing_skills.map((s) => (
                   <span
                     key={s}
-                    className="px-2.5 py-1 rounded-md bg-amber-500/20 text-amber-300 text-sm"
+                    className="px-3 py-1 rounded-full border border-amber-500/40 bg-amber-500/10 text-amber-200 text-sm"
                   >
                     {s}
                   </span>
@@ -108,7 +110,7 @@ export default function Match() {
           </div>
 
           {result.suggestions?.length > 0 && (
-            <div className="p-6 rounded-xl bg-slate-800/50 border border-slate-700">
+            <div className="p-6 rounded-2xl bg-slate-900/75 border border-slate-700/80 shadow-lg shadow-slate-950/50">
               <h3 className="text-sm font-medium text-slate-400 uppercase tracking-wider mb-2">
                 Suggestions
               </h3>
