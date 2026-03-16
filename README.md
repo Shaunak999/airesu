@@ -81,3 +81,40 @@ Edit `resume_ai/analyzer/skills_list.py` and add entries to `SKILLS_LIST` to imp
 
 - **Backend:** e.g. Render, Railway (set `ALLOWED_HOSTS`, `SECRET_KEY`, DB)
 - **Frontend:** e.g. Vercel (set API base URL to your backend)
+
+## Deployment Guide (Vercel + Django API)
+
+Recommended production setup:
+- Deploy `frontend/` on Vercel
+- Deploy `resume_ai/` backend on Render/Railway/Fly with Postgres
+
+### 1) Backend environment
+
+Use env vars like this (see `resume_ai/.env.example`):
+- `DEBUG=False`
+- `SECRET_KEY=...`
+- `ALLOWED_HOSTS=your-backend-domain.com`
+- `CORS_ALLOWED_ORIGINS=https://your-app.vercel.app`
+- `DATABASE_URL=postgresql://...`
+
+Install deps and migrate:
+
+```bash
+pip install -r requirements.txt
+python manage.py migrate
+```
+
+### 2) Frontend environment
+
+Set this in Vercel Project Settings (see `frontend/.env.example`):
+- `VITE_API_BASE_URL=https://your-backend-domain.com/api`
+
+Vercel build settings:
+- Root Directory: `frontend`
+- Build Command: `npm run build`
+- Output Directory: `dist`
+
+### 3) Local development
+
+You can keep using local proxy by not setting `VITE_API_BASE_URL`.
+In that case, frontend will use `/api` and Vite proxy will forward to Django.
