@@ -1,4 +1,4 @@
-# AI Resume Analyzer — 3-Day MVP
+# AI Resume Analyzer 
 
 Upload a resume (PDF) → extract text → detect skills → compare with a job description → get **match score**, **skills found**, and **missing skills**.
 
