@@ -10,6 +10,8 @@ export default function Register() {
   const [password_confirm, setPasswordConfirm] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const API_BASE = (import.meta.env.VITE_API_BASE_URL || '/api').replace(/\/+$/, '')
+
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -25,7 +27,7 @@ export default function Register() {
     } catch (err) {
       const data = err.response?.data
       if (!err.response) {
-        setError('Cannot reach server. Is the backend running at http://127.0.0.1:8000?')
+        setError('Cannot reach server at . Check backend status and CORS_ALLOWED_ORIGINS.')
         return
       }
       if (typeof data === 'object' && data !== null) {
@@ -130,3 +132,4 @@ export default function Register() {
     </div>
   )
 }
+
