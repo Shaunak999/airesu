@@ -53,15 +53,27 @@ export const resumes = {
       headers: { 'Content-Type': 'multipart/form-data' },
     })
   },
+  uploadMany: (files) => {
+    const form = new FormData()
+    Array.from(files).forEach((file) => form.append('files', file))
+    return api.post('/resumes/upload/', form, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    })
+  },
 }
 
 export const match = {
   analyze: (job_description) =>
-    api.post('/match/', { job_description }),
+    api.post('/match/', job_description ? { job_description } : {}),
 }
 
 export const dashboard = {
   get: () => api.get('/dashboard/'),
+}
+
+export const jobProfile = {
+  get: () => api.get('/job-profile/'),
+  save: (title, description) => api.post('/job-profile/', { title, description }),
 }
 
 export default api

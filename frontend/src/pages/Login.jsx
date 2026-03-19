@@ -76,8 +76,8 @@ export default function Login() {
         </div>
       </div>
 
-      <div className="w-full max-w-md surface-card p-8 animate-pop relative z-10">
-        <h1 className="text-4xl font-bold text-center text-slate-900 mb-2 tracking-tight headline">
+      <div className="w-full max-w-md surface-card p-6 sm:p-8 animate-pop relative z-10">
+        <h1 className="text-3xl sm:text-4xl font-bold text-center text-slate-900 mb-2 tracking-tight headline">
           Resume Studio
         </h1>
         <p className="text-slate-600 text-center text-sm mb-8">

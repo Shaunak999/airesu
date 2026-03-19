@@ -44,13 +44,13 @@ export default function Dashboard() {
   if (!data?.has_resume) {
     return (
       <div className="max-w-lg mx-auto text-center py-12">
-        <h2 className="text-xl font-semibold text-slate-200 mb-2">No resume yet</h2>
-        <p className="text-slate-400 mb-6">{data?.message || 'Upload a PDF resume to get started.'}</p>
+        <h2 className="text-xl font-semibold text-slate-800 mb-2">No resumes yet</h2>
+        <p className="text-slate-600 mb-6">{data?.message || 'Upload candidate resumes to get started.'}</p>
         <Link
           to="/upload"
-          className="inline-flex items-center px-4 py-2 rounded-lg bg-emerald-500 text-slate-900 font-medium hover:bg-emerald-400"
+          className="inline-flex items-center px-4 py-2 rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-500"
         >
-          Upload Resume
+          Upload Candidate Resume
         </Link>
       </div>
     )
@@ -89,14 +89,29 @@ export default function Dashboard() {
   ]
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 sm:space-y-8">
       <div>
-        <h1 className="text-4xl font-bold text-slate-900 headline">Dashboard</h1>
+        <h1 className="text-3xl sm:text-4xl font-bold text-slate-900 headline">Dashboard</h1>
         <p className="text-slate-600 mt-2">{data.message}</p>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-3">
-        <div className="p-6 rounded-2xl bg-white/85 border border-slate-200 shadow-lg">
+      <div className="p-4 sm:p-5 rounded-2xl bg-white/85 border border-slate-200 shadow-lg">
+        <p className="text-xs uppercase tracking-widest text-slate-500 mb-2">Active Job Description</p>
+        {data.active_job_profile ? (
+          <div>
+            <p className="text-slate-900 font-semibold">{data.active_job_profile.title}</p>
+            <p className="text-slate-600 text-sm mt-1 line-clamp-2">
+              {data.active_job_profile.description}
+            </p>
+            <p className="text-slate-500 text-xs mt-2">Total resumes uploaded: {data.resumes_count || 0}</p>
+          </div>
+        ) : (
+          <p className="text-slate-600 text-sm">No active job description. Add one from the Match page.</p>
+        )}
+      </div>
+
+      <div className="grid gap-4 sm:gap-6 md:grid-cols-3">
+        <div className="p-4 sm:p-6 rounded-2xl bg-white/85 border border-slate-200 shadow-lg">
           <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-widest mb-2">
             Latest resume
           </h3>
@@ -109,7 +124,7 @@ export default function Dashboard() {
           </Link>
         </div>
 
-        <div className="p-6 rounded-2xl bg-white/85 border border-slate-200 shadow-lg md:col-span-2">
+        <div className="p-4 sm:p-6 rounded-2xl bg-white/85 border border-slate-200 shadow-lg md:col-span-2">
           <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-widest mb-3">
             Skills detected
           </h3>
@@ -130,8 +145,8 @@ export default function Dashboard() {
         </div>
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-2">
-        <div className="p-6 rounded-2xl bg-white/85 border border-slate-200 shadow-lg">
+      <div className="grid gap-4 sm:gap-6 lg:grid-cols-2">
+        <div className="p-4 sm:p-6 rounded-2xl bg-white/85 border border-slate-200 shadow-lg">
           <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-widest mb-3">
             Skill Coverage
           </h3>
@@ -148,7 +163,7 @@ export default function Dashboard() {
           <p className="mt-1 text-sm text-slate-500">Skill Coverage: {coverage}%</p>
         </div>
 
-        <div className="p-6 rounded-2xl bg-white/85 border border-slate-200 shadow-lg">
+        <div className="p-4 sm:p-6 rounded-2xl bg-white/85 border border-slate-200 shadow-lg">
           <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-widest mb-3">
             Suggestions
           </h3>
@@ -162,11 +177,11 @@ export default function Dashboard() {
         </div>
       </div>
 
-      <div className="p-6 rounded-2xl bg-white/85 border border-slate-200 shadow-lg">
+      <div className="p-4 sm:p-6 rounded-2xl bg-white/85 border border-slate-200 shadow-lg">
         <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-widest mb-4">
           Skill Coverage Chart
         </h3>
-        <div className="h-72">
+        <div className="h-56 sm:h-72">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={chartData} margin={{ top: 5, right: 20, left: -15, bottom: 45 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="#cbd5e1" />
@@ -186,7 +201,7 @@ export default function Dashboard() {
         </div>
       </div>
 
-      <div className="p-6 rounded-2xl bg-white/85 border border-slate-200 shadow-lg">
+      <div className="p-4 sm:p-6 rounded-2xl bg-white/85 border border-slate-200 shadow-lg">
         <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-widest mb-2">
           Get match score
         </h3>

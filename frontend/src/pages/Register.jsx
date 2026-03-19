@@ -56,7 +56,7 @@ export default function Register() {
         <div className="absolute right-[12%] top-[15%] h-28 w-28 rounded-full bg-indigo-300/20 blur-2xl animate-pulse-soft" />
       </div>
 
-      <div className="w-full max-w-5xl grid lg:grid-cols-2 gap-6">
+      <div className="w-full max-w-5xl grid lg:grid-cols-2 gap-4 sm:gap-6">
         <div className="hidden lg:flex surface-card p-8 animate-fade-up flex-col justify-between">
           <div>
             <p className="text-xs uppercase tracking-[0.2em] text-slate-500">Profile Strategy</p>
@@ -73,8 +73,8 @@ export default function Register() {
           </div>
         </div>
 
-        <div className="w-full surface-card p-8 animate-pop">
-        <h1 className="text-4xl font-bold text-center text-slate-900 mb-2 tracking-tight headline">
+        <div className="w-full surface-card p-6 sm:p-8 animate-pop">
+        <h1 className="text-3xl sm:text-4xl font-bold text-center text-slate-900 mb-2 tracking-tight headline">
           Create account
         </h1>
         <p className="text-slate-600 text-center text-sm mb-8">

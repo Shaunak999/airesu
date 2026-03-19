@@ -40,17 +40,17 @@ export default function Layout() {
         </div>
       </div>
       <header className="border-b border-slate-200/80 bg-white/70 backdrop-blur-xl animate-fade-up">
-        <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
-          <NavLink to="/dashboard" className="text-xl font-semibold text-slate-900 tracking-wide headline">
+        <div className="max-w-6xl mx-auto px-4 py-3 sm:py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          <NavLink to="/dashboard" className="text-lg sm:text-xl font-semibold text-slate-900 tracking-wide headline">
             Resume Studio
           </NavLink>
-          <nav className="flex items-center gap-3 sm:gap-4">
+          <nav className="flex items-center gap-2 sm:gap-3 overflow-x-auto pb-1 sm:pb-0">
             {nav.map(({ to, label }) => (
               <NavLink
                 key={to}
                 to={to}
                 className={({ isActive }) =>
-                  `px-3 py-1.5 rounded-full text-sm font-medium transition-all duration-300 ${
+                  `shrink-0 px-3 py-1.5 rounded-full text-xs sm:text-sm font-medium transition-all duration-300 ${
                     isActive
                       ? 'text-blue-700 bg-blue-100 border border-blue-200 shadow-sm'
                       : 'text-slate-600 hover:text-slate-900 hover:bg-white border border-transparent'
@@ -62,14 +62,14 @@ export default function Layout() {
             ))}
             <button
               onClick={logout}
-              className="text-sm px-3 py-1.5 rounded-full text-slate-600 hover:text-red-600 hover:bg-red-100/70 transition-all duration-300"
+              className="shrink-0 text-xs sm:text-sm px-3 py-1.5 rounded-full text-slate-600 hover:text-red-600 hover:bg-red-100/70 transition-all duration-300"
             >
               Logout
             </button>
           </nav>
         </div>
       </header>
-      <main className="flex-1 max-w-6xl w-full mx-auto px-4 py-8 animate-fade-up-delay">
+      <main className="flex-1 max-w-6xl w-full mx-auto px-4 py-6 sm:py-8 animate-fade-up-delay">
         <Outlet />
       </main>
     </div>

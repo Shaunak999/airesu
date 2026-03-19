@@ -9,6 +9,7 @@ urlpatterns = [
     path("auth/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
     path("resumes/", views.ResumeListView.as_view(), name="resume-list"),
     path("resumes/upload/", views.ResumeUploadView.as_view(), name="resume-upload"),
+    path("job-profile/", views.JobProfileView.as_view(), name="job-profile"),
     path("match/", views.JobMatchView.as_view(), name="job-match"),
     path("dashboard/", views.DashboardView.as_view(), name="dashboard"),
 ]

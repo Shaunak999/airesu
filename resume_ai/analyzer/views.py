@@ -6,12 +6,13 @@ from rest_framework.views import APIView
 from django.contrib.auth.models import User
 from django.db import IntegrityError
 
-from .models import Resume
+from .models import Resume, JobProfile
 from .serializers import (
     UserRegisterSerializer,
     ResumeSerializer,
     ResumeUploadSerializer,
     JobMatchRequestSerializer,
+    JobProfileSerializer,
 )
 from .services import (
     extract_text_from_pdf,
@@ -56,26 +57,38 @@ class ResumeUploadView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
-        serializer = ResumeUploadSerializer(data=request.data)
-        if not serializer.is_valid():
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        file = serializer.validated_data["file"]
-        if not file.name.lower().endswith(".pdf"):
-            return Response(
-                {"error": "Only PDF files are supported."},
-                status=status.HTTP_400_BAD_REQUEST,
+        files = request.FILES.getlist("files")
+        if not files:
+            serializer = ResumeUploadSerializer(data=request.data)
+            if not serializer.is_valid():
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            files = [serializer.validated_data["file"]]
+
+        created = []
+        failed = []
+        for file in files:
+            if not file.name.lower().endswith(".pdf"):
+                failed.append({"filename": file.name, "error": "Only PDF files are supported."})
+                continue
+
+            text = extract_text_from_pdf(file)
+            skills = extract_skills(text)
+            resume = Resume.objects.create(
+                user=request.user,
+                original_filename=file.name,
+                extracted_text=text,
+                skills=skills,
             )
-        text = extract_text_from_pdf(file)
-        skills = extract_skills(text)
-        resume = Resume.objects.create(
-            user=request.user,
-            original_filename=file.name,
-            extracted_text=text,
-            skills=skills,
-        )
+            created.append(ResumeSerializer(resume).data)
+
         return Response(
-            ResumeSerializer(resume).data,
-            status=status.HTTP_201_CREATED,
+            {
+                "uploaded_count": len(created),
+                "failed_count": len(failed),
+                "uploaded": created,
+                "failed": failed,
+            },
+            status=status.HTTP_201_CREATED if created else status.HTTP_400_BAD_REQUEST,
         )
 
 
@@ -87,6 +100,40 @@ class ResumeListView(generics.ListAPIView):
         return Resume.objects.filter(user=self.request.user)
 
 
+class JobProfileView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        active = JobProfile.objects.filter(user=request.user, is_active=True).first()
+        if not active:
+            return Response(
+                {"job_profile": None, "message": "No active job description. Add one to start screening resumes."},
+                status=status.HTTP_200_OK,
+            )
+        return Response(
+            {"job_profile": JobProfileSerializer(active).data},
+            status=status.HTTP_200_OK,
+        )
+
+    def post(self, request):
+        title = (request.data.get("title") or "Active Job Description").strip()
+        description = (request.data.get("description") or "").strip()
+        if not description:
+            return Response({"description": ["This field is required."]}, status=status.HTTP_400_BAD_REQUEST)
+
+        JobProfile.objects.filter(user=request.user, is_active=True).update(is_active=False)
+        job = JobProfile.objects.create(
+            user=request.user,
+            title=title,
+            description=description,
+            is_active=True,
+        )
+        return Response(
+            {"job_profile": JobProfileSerializer(job).data, "message": "Job description saved as active."},
+            status=status.HTTP_201_CREATED,
+        )
+
+
 class JobMatchView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -94,33 +141,80 @@ class JobMatchView(APIView):
         req = JobMatchRequestSerializer(data=request.data)
         if not req.is_valid():
             return Response(req.errors, status=status.HTTP_400_BAD_REQUEST)
-        job_description = req.validated_data["job_description"]
-        job_skills = extract_skills_from_job_description(job_description)
-        latest = Resume.objects.filter(user=request.user).first()
-        if not latest:
+
+        provided_description = req.validated_data.get("job_description")
+        if provided_description:
+            current = JobProfile.objects.filter(user=request.user, is_active=True).first()
+            if current:
+                current.description = provided_description
+                current.save(update_fields=["description", "updated_at"])
+                active_job = current
+            else:
+                active_job = JobProfile.objects.create(
+                    user=request.user,
+                    title="Active Job Description",
+                    description=provided_description,
+                    is_active=True,
+                )
+        else:
+            active_job = JobProfile.objects.filter(user=request.user, is_active=True).first()
+
+        if not active_job:
             return Response(
                 {
-                    "match_score": 0.0,
-                    "skills_found": [],
-                    "missing_skills": job_skills,
-                    "suggestions": ["Upload a resume first to get a match score."],
+                    "job_profile": None,
+                    "ranked_candidates": [],
+                    "message": "No active job description. Add one to screen resumes.",
                 },
                 status=status.HTTP_200_OK,
             )
-        resume_skills = latest.skills
-        score = match_score(resume_skills, job_skills)
-        missing = missing_skills(resume_skills, job_skills)
-        suggestions = []
-        if missing:
-            suggestions.append(f"Consider adding or highlighting: {', '.join(missing[:5])}.")
-        if score < 70:
-            suggestions.append("Try to gain experience in the missing skills or reframe existing experience.")
+
+        job_skills = extract_skills_from_job_description(active_job.description)
+        resumes = list(Resume.objects.filter(user=request.user))
+        if not resumes:
+            return Response(
+                {
+                    "job_profile": JobProfileSerializer(active_job).data,
+                    "total_resumes": 0,
+                    "ranked_candidates": [],
+                    "message": "Upload resumes to start ranking compatibility.",
+                },
+                status=status.HTTP_200_OK,
+            )
+
+        ranked = []
+        for resume in resumes:
+            resume_skills = resume.skills
+            score = match_score(resume_skills, job_skills)
+            missing = missing_skills(resume_skills, job_skills)
+            suggestions = []
+            if missing:
+                suggestions.append(f"Missing key skills: {', '.join(missing[:5])}.")
+            if score < 70:
+                suggestions.append("Lower compatibility. Consider shortlist hold and manual review.")
+
+            ranked.append(
+                {
+                    "resume_id": resume.id,
+                    "resume_name": resume.original_filename,
+                    "uploaded_at": resume.created_at,
+                    "match_score": score,
+                    "skills_found": resume_skills,
+                    "missing_skills": missing,
+                    "suggestions": suggestions,
+                }
+            )
+
+        ranked.sort(key=lambda item: item["match_score"], reverse=True)
+        for idx, item in enumerate(ranked, start=1):
+            item["rank"] = idx
+
         return Response(
             {
-                "match_score": score,
-                "skills_found": resume_skills,
-                "missing_skills": missing,
-                "suggestions": suggestions,
+                "job_profile": JobProfileSerializer(active_job).data,
+                "total_resumes": len(ranked),
+                "ranked_candidates": ranked,
+                "message": "Candidates ranked by compatibility against the active job description.",
             },
             status=status.HTTP_200_OK,
         )
@@ -130,24 +224,32 @@ class DashboardView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        """Dashboard: latest resume summary (score requires a job match; here we show resume stats)."""
+        """Dashboard for recruiter workflow."""
         latest = Resume.objects.filter(user=request.user).first()
+        active_job = JobProfile.objects.filter(user=request.user, is_active=True).first()
+        resumes_count = Resume.objects.filter(user=request.user).count()
+
         if not latest:
             return Response(
                 {
                     "has_resume": False,
+                    "resumes_count": resumes_count,
+                    "active_job_profile": JobProfileSerializer(active_job).data if active_job else None,
                     "resume": None,
                     "skills_found": [],
-                    "message": "Upload a resume to see your dashboard.",
+                    "message": "Upload candidate resumes to start screening.",
                 },
                 status=status.HTTP_200_OK,
             )
+
         return Response(
             {
                 "has_resume": True,
+                "resumes_count": resumes_count,
+                "active_job_profile": JobProfileSerializer(active_job).data if active_job else None,
                 "resume": ResumeSerializer(latest).data,
                 "skills_found": latest.skills,
-                "message": "Paste a job description in the Match tab to get your match score.",
+                "message": "Set an active job description in Match, then rank all uploaded resumes.",
             },
             status=status.HTTP_200_OK,
         )

@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
-from .models import Resume
+from .models import Resume, JobProfile
 
 
 class UserRegisterSerializer(serializers.ModelSerializer):
@@ -44,7 +44,14 @@ class ResumeUploadSerializer(serializers.Serializer):
 
 
 class JobMatchRequestSerializer(serializers.Serializer):
-    job_description = serializers.CharField()
+    job_description = serializers.CharField(required=False, allow_blank=False)
+
+
+class JobProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = JobProfile
+        fields = ("id", "title", "description", "is_active", "created_at", "updated_at")
+        read_only_fields = ("id", "is_active", "created_at", "updated_at")
 
 
 class MatchResultSerializer(serializers.Serializer):
