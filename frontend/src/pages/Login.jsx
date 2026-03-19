@@ -43,7 +43,7 @@ export default function Login() {
 
       <div className="w-full max-w-md rounded-3xl border border-slate-700/80 bg-slate-900/75 backdrop-blur-xl p-8 shadow-2xl shadow-slate-950/60 animate-pop">
         <h1 className="text-3xl font-bold text-center text-emerald-300 mb-2 tracking-tight">
-          AI Resume Analyzer
+          Resume Studio
         </h1>
         <p className="text-slate-300 text-center text-sm mb-8">
           Sign in to analyze your resume and match with job descriptions
@@ -104,3 +104,4 @@ export default function Login() {
     </div>
   )
 }
+

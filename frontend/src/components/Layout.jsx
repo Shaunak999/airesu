@@ -24,7 +24,7 @@ export default function Layout() {
       <header className="border-b border-slate-800/80 bg-slate-900/65 backdrop-blur-xl animate-fade-up">
         <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
           <NavLink to="/dashboard" className="text-xl font-semibold text-emerald-300 tracking-wide">
-            AI Resume Analyzer
+            Resume Studio
           </NavLink>
           <nav className="flex items-center gap-3 sm:gap-4">
             {nav.map(({ to, label }) => (
@@ -57,3 +57,4 @@ export default function Layout() {
     </div>
   )
 }
+
