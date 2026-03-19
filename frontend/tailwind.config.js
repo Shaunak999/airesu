@@ -26,6 +26,18 @@ export default {
           '0%, 100%': { opacity: '0.55' },
           '50%': { opacity: '0.95' },
         },
+        drift: {
+          '0%, 100%': { transform: 'translateX(0px) translateY(0px)' },
+          '50%': { transform: 'translateX(10px) translateY(-6px)' },
+        },
+        orbit: {
+          '0%': { transform: 'rotate(0deg) translateX(14px) rotate(0deg)' },
+          '100%': { transform: 'rotate(360deg) translateX(14px) rotate(-360deg)' },
+        },
+        shimmer: {
+          '0%, 100%': { opacity: '0.35', transform: 'translateX(-4px)' },
+          '50%': { opacity: '0.75', transform: 'translateX(4px)' },
+        },
       },
       animation: {
         'fade-up': 'fade-up 0.6s ease-out both',
@@ -33,6 +45,9 @@ export default {
         pop: 'pop 0.35s ease-out both',
         float: 'float 6s ease-in-out infinite',
         'pulse-soft': 'pulse-soft 4s ease-in-out infinite',
+        drift: 'drift 9s ease-in-out infinite',
+        orbit: 'orbit 12s linear infinite',
+        shimmer: 'shimmer 6s ease-in-out infinite',
       },
     },
   },

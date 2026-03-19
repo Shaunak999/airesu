@@ -29,32 +29,32 @@ export default function Match() {
   return (
     <div className="max-w-3xl space-y-6 animate-fade-up">
       <div>
-        <h1 className="text-3xl font-bold text-slate-100 mb-2">Job Description Match</h1>
-        <p className="text-slate-300 mb-1">
+        <h1 className="text-4xl font-bold text-slate-900 mb-2 headline">Job Description Match</h1>
+        <p className="text-slate-600 mb-1">
           Paste a job description below. We'll compare it with your uploaded resume and show match score, skills found, and missing skills.
         </p>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-4 rounded-2xl border border-slate-700/80 bg-slate-900/75 backdrop-blur p-6 shadow-xl shadow-slate-950/50">
+      <form onSubmit={handleSubmit} className="space-y-4 surface-card p-6">
         {error && (
-          <div className="p-3 rounded-xl bg-red-500/10 border border-red-500/30 text-red-300 text-sm animate-fade-up">
+          <div className="p-3 rounded-xl bg-red-50 border border-red-200 text-red-700 text-sm animate-fade-up">
             {error}
           </div>
         )}
         <div>
-          <label className="block text-sm font-medium text-slate-300 mb-2">Job description</label>
+          <label className="block text-sm font-medium text-slate-700 mb-2">Job description</label>
           <textarea
             value={jobDescription}
             onChange={(e) => setJobDescription(e.target.value)}
             rows={8}
-            className="w-full px-4 py-3 rounded-xl bg-slate-800/90 border border-slate-700 text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-400 resize-y transition-all duration-300"
+            className="w-full px-4 py-3 rounded-xl bg-white/85 border border-slate-300 text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-400/50 focus:border-blue-400 resize-y transition-all duration-300"
             placeholder="Paste the full job description here..."
           />
         </div>
         <button
           type="submit"
           disabled={loading}
-          className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-400 to-cyan-300 text-slate-900 font-semibold hover:from-emerald-300 hover:to-cyan-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
+          className="px-5 py-2.5 primary-btn"
         >
           {loading ? 'Analyzing...' : 'Get Match Score'}
         </button>
@@ -62,15 +62,15 @@ export default function Match() {
 
       {result && (
         <div className="mt-2 space-y-6 animate-fade-up">
-          <div className="p-6 rounded-2xl bg-slate-900/75 border border-slate-700/80 shadow-lg shadow-slate-950/50">
-            <h3 className="text-sm font-medium text-slate-400 uppercase tracking-wider mb-2">
+          <div className="p-6 rounded-2xl bg-white/85 border border-slate-200 shadow-lg">
+            <h3 className="text-sm font-medium text-slate-500 uppercase tracking-wider mb-2">
               Match Score
             </h3>
-            <p className="text-5xl font-bold text-emerald-300">{result.match_score}%</p>
+            <p className="text-5xl font-bold text-blue-700">{result.match_score}%</p>
           </div>
 
-          <div className="p-6 rounded-2xl bg-slate-900/75 border border-slate-700/80 shadow-lg shadow-slate-950/50">
-            <h3 className="text-sm font-medium text-slate-400 uppercase tracking-wider mb-2">
+          <div className="p-6 rounded-2xl bg-white/85 border border-slate-200 shadow-lg">
+            <h3 className="text-sm font-medium text-slate-500 uppercase tracking-wider mb-2">
               Skills found in your resume
             </h3>
             {result.skills_found?.length > 0 ? (
@@ -78,7 +78,7 @@ export default function Match() {
                 {result.skills_found.map((s) => (
                   <span
                     key={s}
-                    className="px-3 py-1 rounded-full border border-emerald-500/40 bg-emerald-500/10 text-emerald-200 text-sm"
+                    className="px-3 py-1 rounded-full border border-blue-200 bg-blue-50 text-blue-700 text-sm"
                   >
                     {s}
                   </span>
@@ -89,8 +89,8 @@ export default function Match() {
             )}
           </div>
 
-          <div className="p-6 rounded-2xl bg-slate-900/75 border border-slate-700/80 shadow-lg shadow-slate-950/50">
-            <h3 className="text-sm font-medium text-slate-400 uppercase tracking-wider mb-2">
+          <div className="p-6 rounded-2xl bg-white/85 border border-slate-200 shadow-lg">
+            <h3 className="text-sm font-medium text-slate-500 uppercase tracking-wider mb-2">
               Missing skills
             </h3>
             {result.missing_skills?.length > 0 ? (
@@ -98,7 +98,7 @@ export default function Match() {
                 {result.missing_skills.map((s) => (
                   <span
                     key={s}
-                    className="px-3 py-1 rounded-full border border-amber-500/40 bg-amber-500/10 text-amber-200 text-sm"
+                    className="px-3 py-1 rounded-full border border-amber-200 bg-amber-50 text-amber-700 text-sm"
                   >
                     {s}
                   </span>
@@ -110,11 +110,11 @@ export default function Match() {
           </div>
 
           {result.suggestions?.length > 0 && (
-            <div className="p-6 rounded-2xl bg-slate-900/75 border border-slate-700/80 shadow-lg shadow-slate-950/50">
-              <h3 className="text-sm font-medium text-slate-400 uppercase tracking-wider mb-2">
+            <div className="p-6 rounded-2xl bg-white/85 border border-slate-200 shadow-lg">
+              <h3 className="text-sm font-medium text-slate-500 uppercase tracking-wider mb-2">
                 Suggestions
               </h3>
-              <ul className="list-disc list-inside text-slate-300 text-sm space-y-1">
+              <ul className="list-disc list-inside text-slate-700 text-sm space-y-1">
                 {result.suggestions.map((s, i) => (
                   <li key={i}>{s}</li>
                 ))}

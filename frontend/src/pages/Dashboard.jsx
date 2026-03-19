@@ -28,7 +28,7 @@ export default function Dashboard() {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-16">
-        <div className="text-slate-400">Loading dashboard...</div>
+        <div className="text-slate-500">Loading dashboard...</div>
       </div>
     )
   }
@@ -91,26 +91,26 @@ export default function Dashboard() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-bold text-slate-100">Dashboard</h1>
-        <p className="text-slate-400 mt-2">{data.message}</p>
+        <h1 className="text-4xl font-bold text-slate-900 headline">Dashboard</h1>
+        <p className="text-slate-600 mt-2">{data.message}</p>
       </div>
 
       <div className="grid gap-6 md:grid-cols-3">
-        <div className="p-6 rounded-2xl bg-gradient-to-b from-slate-900 to-slate-800/80 border border-slate-700 shadow-lg">
-          <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-2">
+        <div className="p-6 rounded-2xl bg-white/85 border border-slate-200 shadow-lg">
+          <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-widest mb-2">
             Latest resume
           </h3>
-          <p className="text-slate-100 font-semibold truncate">{resume?.original_filename || 'Resume'}</p>
-          <p className="text-slate-400 text-sm mt-2">
+          <p className="text-slate-900 font-semibold truncate">{resume?.original_filename || 'Resume'}</p>
+          <p className="text-slate-600 text-sm mt-2">
             Uploaded {resume?.created_at ? new Date(resume.created_at).toLocaleDateString() : ''}
           </p>
-          <Link to="/upload" className="mt-4 inline-block text-sm text-emerald-300 hover:text-emerald-200">
+          <Link to="/upload" className="mt-4 inline-block text-sm text-blue-700 hover:text-blue-600">
             Upload new resume
           </Link>
         </div>
 
-        <div className="p-6 rounded-2xl bg-gradient-to-b from-slate-900 to-slate-800/80 border border-slate-700 shadow-lg md:col-span-2">
-          <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-3">
+        <div className="p-6 rounded-2xl bg-white/85 border border-slate-200 shadow-lg md:col-span-2">
+          <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-widest mb-3">
             Skills detected
           </h3>
           {detectedSkills.length > 0 ? (
@@ -118,7 +118,7 @@ export default function Dashboard() {
               {detectedSkills.map((s) => (
                 <span
                   key={s}
-                  className="px-3 py-1 rounded-full border border-emerald-500/50 bg-emerald-500/10 text-emerald-200 text-sm"
+                  className="px-3 py-1 rounded-full border border-blue-200 bg-blue-50 text-blue-700 text-sm"
                 >
                   {s}
                 </span>
@@ -131,30 +131,30 @@ export default function Dashboard() {
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
-        <div className="p-6 rounded-2xl bg-slate-900/80 border border-slate-700 shadow-lg">
-          <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-3">
+        <div className="p-6 rounded-2xl bg-white/85 border border-slate-200 shadow-lg">
+          <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-widest mb-3">
             Skill Coverage
           </h3>
           <div className="mb-2 flex items-center justify-between text-sm">
-            <span className="text-slate-300">Coverage</span>
-            <span className="text-emerald-300 font-semibold">{coverage}%</span>
+            <span className="text-slate-700">Coverage</span>
+            <span className="text-blue-700 font-semibold">{coverage}%</span>
           </div>
-          <div className="h-3 rounded-full bg-slate-700/70 overflow-hidden">
-            <div className="h-full bg-gradient-to-r from-emerald-500 to-cyan-400" style={{ width: coverageBarWidth }} />
+          <div className="h-3 rounded-full bg-slate-200 overflow-hidden">
+            <div className="h-full bg-gradient-to-r from-blue-600 to-indigo-500" style={{ width: coverageBarWidth }} />
           </div>
-          <p className="mt-3 text-sm text-slate-400">
+          <p className="mt-3 text-sm text-slate-600">
             {matchedTargetSkills.length} of {targetSkills.length} target skills detected.
           </p>
           <p className="mt-1 text-sm text-slate-500">Skill Coverage: {coverage}%</p>
         </div>
 
-        <div className="p-6 rounded-2xl bg-slate-900/80 border border-slate-700 shadow-lg">
-          <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-3">
+        <div className="p-6 rounded-2xl bg-white/85 border border-slate-200 shadow-lg">
+          <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-widest mb-3">
             Suggestions
           </h3>
-          <ul className="space-y-2 text-slate-200">
+          <ul className="space-y-2 text-slate-700">
             {suggestions.map((item) => (
-              <li key={item} className="rounded-lg border border-slate-700 bg-slate-800/60 px-3 py-2">
+              <li key={item} className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2">
                 - {item}
               </li>
             ))}
@@ -162,23 +162,23 @@ export default function Dashboard() {
         </div>
       </div>
 
-      <div className="p-6 rounded-2xl bg-slate-900/80 border border-slate-700 shadow-lg">
-        <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-4">
+      <div className="p-6 rounded-2xl bg-white/85 border border-slate-200 shadow-lg">
+        <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-widest mb-4">
           Skill Coverage Chart
         </h3>
         <div className="h-72">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={chartData} margin={{ top: 5, right: 20, left: -15, bottom: 45 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
-              <XAxis dataKey="name" angle={-25} textAnchor="end" interval={0} height={60} stroke="#94a3b8" />
-              <YAxis stroke="#94a3b8" domain={[0, 100]} />
+              <CartesianGrid strokeDasharray="3 3" stroke="#cbd5e1" />
+              <XAxis dataKey="name" angle={-25} textAnchor="end" interval={0} height={60} stroke="#64748b" />
+              <YAxis stroke="#64748b" domain={[0, 100]} />
               <Tooltip
-                cursor={{ fill: 'rgba(15, 23, 42, 0.45)' }}
-                contentStyle={{ backgroundColor: '#0f172a', borderColor: '#334155', color: '#e2e8f0' }}
+                cursor={{ fill: 'rgba(59, 130, 246, 0.08)' }}
+                contentStyle={{ backgroundColor: '#ffffff', borderColor: '#cbd5e1', color: '#334155' }}
               />
               <Bar dataKey="covered" radius={[6, 6, 0, 0]}>
                 {chartData.map((entry) => (
-                  <Cell key={entry.name} fill={entry.covered > 0 ? '#34d399' : '#475569'} />
+                  <Cell key={entry.name} fill={entry.covered > 0 ? '#2563eb' : '#94a3b8'} />
                 ))}
               </Bar>
             </BarChart>
@@ -186,16 +186,16 @@ export default function Dashboard() {
         </div>
       </div>
 
-      <div className="p-6 rounded-2xl bg-slate-900/80 border border-slate-700 shadow-lg">
-        <h3 className="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-2">
+      <div className="p-6 rounded-2xl bg-white/85 border border-slate-200 shadow-lg">
+        <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-widest mb-2">
           Get match score
         </h3>
-        <p className="text-slate-300 mb-4">
+        <p className="text-slate-700 mb-4">
           Paste a job description in the Match tab to see how well your resume fits and which skills you're missing.
         </p>
         <Link
           to="/match"
-          className="inline-flex items-center px-4 py-2 rounded-lg bg-emerald-500 text-slate-900 font-medium hover:bg-emerald-400"
+          className="inline-flex items-center px-4 py-2 rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-500"
         >
           Go to Job Match
         </Link>

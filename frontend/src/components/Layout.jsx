@@ -2,6 +2,12 @@ import { Outlet, NavLink, useNavigate } from 'react-router-dom'
 
 export default function Layout() {
   const navigate = useNavigate()
+  const phrases = [
+    'ATS-friendly resume',
+    'Impact-focused bullet points',
+    'Role-fit skill alignment',
+    'Keyword coverage map',
+  ]
 
   const logout = () => {
     localStorage.removeItem('access')
@@ -18,12 +24,24 @@ export default function Layout() {
   return (
     <div className="min-h-screen flex flex-col relative overflow-x-hidden">
       <div className="pointer-events-none absolute inset-0">
-        <div className="absolute top-8 left-10 h-28 w-28 rounded-full bg-emerald-400/10 blur-2xl animate-pulse-soft" />
-        <div className="absolute top-28 right-10 h-24 w-24 rounded-full bg-cyan-400/10 blur-2xl animate-float" />
+        <div className="absolute top-8 left-10 h-28 w-28 rounded-full bg-blue-400/10 blur-2xl animate-pulse-soft" />
+        <div className="absolute top-28 right-10 h-24 w-24 rounded-full bg-indigo-300/20 blur-2xl animate-float" />
+        <div className="absolute inset-x-0 bottom-6 hidden md:flex justify-center gap-3 px-4">
+          {phrases.map((text, idx) => (
+            <span
+              key={text}
+              className={`phrase-chip rounded-full px-3 py-1 text-xs tracking-wide motion-safe:animate-drift ${
+                idx % 2 === 0 ? 'motion-safe:[animation-delay:0.5s]' : 'motion-safe:[animation-delay:1.2s]'
+              }`}
+            >
+              {text}
+            </span>
+          ))}
+        </div>
       </div>
-      <header className="border-b border-slate-800/80 bg-slate-900/65 backdrop-blur-xl animate-fade-up">
+      <header className="border-b border-slate-200/80 bg-white/70 backdrop-blur-xl animate-fade-up">
         <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
-          <NavLink to="/dashboard" className="text-xl font-semibold text-emerald-300 tracking-wide">
+          <NavLink to="/dashboard" className="text-xl font-semibold text-slate-900 tracking-wide headline">
             Resume Studio
           </NavLink>
           <nav className="flex items-center gap-3 sm:gap-4">
@@ -34,8 +52,8 @@ export default function Layout() {
                 className={({ isActive }) =>
                   `px-3 py-1.5 rounded-full text-sm font-medium transition-all duration-300 ${
                     isActive
-                      ? 'text-emerald-200 bg-emerald-500/20 border border-emerald-400/30 shadow-sm shadow-emerald-500/20'
-                      : 'text-slate-300 hover:text-slate-100 hover:bg-slate-800/80 border border-transparent'
+                      ? 'text-blue-700 bg-blue-100 border border-blue-200 shadow-sm'
+                      : 'text-slate-600 hover:text-slate-900 hover:bg-white border border-transparent'
                   }`
                 }
               >
@@ -44,7 +62,7 @@ export default function Layout() {
             ))}
             <button
               onClick={logout}
-              className="text-sm px-3 py-1.5 rounded-full text-slate-300 hover:text-red-300 hover:bg-red-500/10 transition-all duration-300"
+              className="text-sm px-3 py-1.5 rounded-full text-slate-600 hover:text-red-600 hover:bg-red-100/70 transition-all duration-300"
             >
               Logout
             </button>
@@ -57,4 +75,3 @@ export default function Layout() {
     </div>
   )
 }
-
