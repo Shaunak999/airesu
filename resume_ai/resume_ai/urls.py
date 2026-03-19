@@ -18,8 +18,21 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from django.http import JsonResponse
+
+
+def health_root(_request):
+    return JsonResponse(
+        {
+            "status": "ok",
+            "service": "airesu-backend",
+            "message": "Backend is running.",
+            "api_base": "/api/",
+        }
+    )
 
 urlpatterns = [
+    path("", health_root),
     path("admin/", admin.site.urls),
     path("api/", include("analyzer.urls")),
 ]

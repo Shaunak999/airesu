@@ -5,6 +5,7 @@ import Register from './pages/Register'
 import Dashboard from './pages/Dashboard'
 import Upload from './pages/Upload'
 import Match from './pages/Match'
+import ResumeDetails from './pages/ResumeDetails'
 
 function PrivateRoute({ children }) {
   const token = localStorage.getItem('access')
@@ -26,6 +27,7 @@ export default function App() {
       <Route path="/" element={<PrivateRoute><Layout /></PrivateRoute>}>
         <Route index element={<Navigate to="/dashboard" replace />} />
         <Route path="dashboard" element={<Dashboard />} />
+        <Route path="resumes/:id" element={<ResumeDetails />} />
         <Route path="upload" element={<Upload />} />
         <Route path="match" element={<Match />} />
       </Route>

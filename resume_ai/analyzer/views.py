@@ -100,6 +100,14 @@ class ResumeListView(generics.ListAPIView):
         return Resume.objects.filter(user=self.request.user)
 
 
+class ResumeDetailView(generics.RetrieveAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = ResumeSerializer
+
+    def get_queryset(self):
+        return Resume.objects.filter(user=self.request.user)
+
+
 class JobProfileView(APIView):
     permission_classes = [IsAuthenticated]
 

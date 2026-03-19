@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { jobProfile, match } from '../api'
 
 export default function Match() {
@@ -53,6 +54,7 @@ export default function Match() {
       await jobProfile.save(title.trim() || 'Active Job Description', jobDescription.trim())
       const { data } = await match.analyze()
       setResult(data)
+      localStorage.setItem('latest_ranking', JSON.stringify(data))
     } catch (err) {
       setError(err.response?.data?.detail || 'Screening failed')
     } finally {
@@ -134,7 +136,15 @@ export default function Match() {
                       {result.ranked_candidates.map((candidate) => (
                         <tr key={candidate.resume_id} className="border-b border-slate-100 last:border-0">
                           <td className="py-3 pr-3 font-semibold text-slate-800">#{candidate.rank}</td>
-                          <td className="py-3 pr-3 text-slate-700">{candidate.resume_name}</td>
+                          <td className="py-3 pr-3 text-slate-700">
+                            <Link
+                              to={`/resumes/${candidate.resume_id}`}
+                              state={{ candidate, jobTitle: result?.job_profile?.title }}
+                              className="text-blue-700 hover:text-blue-600 hover:underline"
+                            >
+                              {candidate.resume_name}
+                            </Link>
+                          </td>
                           <td className="py-3 pr-3">
                             <span className="px-2 py-1 rounded-lg bg-blue-50 text-blue-700 font-semibold">
                               {candidate.match_score}%
@@ -152,7 +162,13 @@ export default function Match() {
                   {result.ranked_candidates.map((candidate) => (
                     <div key={candidate.resume_id} className="rounded-xl border border-slate-200 bg-slate-50 p-3">
                       <div className="flex items-center justify-between gap-2">
-                        <p className="font-semibold text-slate-800 text-sm">#{candidate.rank} {candidate.resume_name}</p>
+                        <Link
+                          to={`/resumes/${candidate.resume_id}`}
+                          state={{ candidate, jobTitle: result?.job_profile?.title }}
+                          className="font-semibold text-blue-700 hover:text-blue-600 hover:underline text-sm"
+                        >
+                          #{candidate.rank} {candidate.resume_name}
+                        </Link>
                         <span className="px-2 py-1 rounded-lg bg-blue-100 text-blue-700 text-xs font-semibold shrink-0">
                           {candidate.match_score}%
                         </span>

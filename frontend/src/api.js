@@ -46,6 +46,7 @@ export const auth = {
 
 export const resumes = {
   list: () => api.get('/resumes/'),
+  get: (id) => api.get(`/resumes/${id}/`),
   upload: (file) => {
     const form = new FormData()
     form.append('file', file)

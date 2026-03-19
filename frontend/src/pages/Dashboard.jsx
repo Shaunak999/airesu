@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { dashboard } from '../api'
+import { dashboard, resumes } from '../api'
 import {
   BarChart,
   Bar,
@@ -16,11 +16,22 @@ export default function Dashboard() {
   const [data, setData] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  const [allResumes, setAllResumes] = useState([])
+  const [latestRanking, setLatestRanking] = useState(null)
 
   useEffect(() => {
-    dashboard
-      .get()
-      .then((res) => setData(res.data))
+    try {
+      const cached = localStorage.getItem('latest_ranking')
+      if (cached) setLatestRanking(JSON.parse(cached))
+    } catch (_) {
+      setLatestRanking(null)
+    }
+
+    Promise.all([dashboard.get(), resumes.list()])
+      .then(([dashboardRes, resumesRes]) => {
+        setData(dashboardRes.data)
+        setAllResumes(resumesRes.data || [])
+      })
       .catch((err) => setError(err.response?.data?.detail || 'Failed to load dashboard'))
       .finally(() => setLoading(false))
   }, [])
@@ -87,6 +98,10 @@ export default function Dashboard() {
     'Mention cloud platforms',
     'Include GitHub projects',
   ]
+  const resumeIdSet = new Set(allResumes.map((item) => item.id))
+  const validRankedCandidates = (latestRanking?.ranked_candidates || []).filter((candidate) =>
+    resumeIdSet.has(candidate.resume_id)
+  )
 
   return (
     <div className="space-y-6 sm:space-y-8">
@@ -144,6 +159,58 @@ export default function Dashboard() {
           )}
         </div>
       </div>
+
+      <div className="p-4 sm:p-6 rounded-2xl bg-white/85 border border-slate-200 shadow-lg">
+        <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-widest mb-4">
+          Uploaded Resumes
+        </h3>
+        {allResumes.length > 0 ? (
+          <div className="space-y-2">
+            {allResumes.map((item, idx) => (
+              <Link
+                key={item.id}
+                to={`/resumes/${item.id}`}
+                className="flex items-center justify-between rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 hover:border-blue-200 hover:bg-blue-50/40 transition"
+              >
+                <div className="min-w-0">
+                  <p className="text-sm font-medium text-slate-800 truncate">
+                    {idx + 1}. {item.original_filename}
+                  </p>
+                  <p className="text-xs text-slate-500">
+                    {item.created_at ? new Date(item.created_at).toLocaleString() : ''}
+                  </p>
+                </div>
+                <span className="text-xs text-blue-700 font-semibold">View</span>
+              </Link>
+            ))}
+          </div>
+        ) : (
+          <p className="text-slate-500 text-sm">No resumes uploaded yet.</p>
+        )}
+      </div>
+
+      {validRankedCandidates.length > 0 && (
+        <div className="p-4 sm:p-6 rounded-2xl bg-white/85 border border-slate-200 shadow-lg">
+          <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-widest mb-4">
+            Latest Ranked Candidates
+          </h3>
+          <div className="space-y-2">
+            {validRankedCandidates.map((candidate) => (
+              <Link
+                key={candidate.resume_id}
+                to={`/resumes/${candidate.resume_id}`}
+                state={{ candidate, jobTitle: latestRanking?.job_profile?.title }}
+                className="flex items-center justify-between rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 hover:border-blue-200 hover:bg-blue-50/40 transition"
+              >
+                <p className="text-sm font-medium text-slate-800 truncate">
+                  #{candidate.rank} {candidate.resume_name}
+                </p>
+                <span className="text-xs text-blue-700 font-semibold">{candidate.match_score}%</span>
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
 
       <div className="grid gap-4 sm:gap-6 lg:grid-cols-2">
         <div className="p-4 sm:p-6 rounded-2xl bg-white/85 border border-slate-200 shadow-lg">

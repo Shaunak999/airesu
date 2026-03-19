@@ -12,6 +12,7 @@ export default function Layout() {
   const logout = () => {
     localStorage.removeItem('access')
     localStorage.removeItem('refresh')
+    localStorage.removeItem('latest_ranking')
     navigate('/login')
   }
 
